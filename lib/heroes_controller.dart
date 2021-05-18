@@ -11,4 +11,10 @@ class HeroesController extends ChangeNotifier{
     HeroModel(name: "Vlad"),
     HeroModel(name: "Deku"),
   ];
+
+  checkFAvorite(HeroModel model) {
+    
+    model.isFavorite = !model.isFavorite;
+    notifyListeners();
+  }
 }

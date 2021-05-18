@@ -13,21 +13,24 @@ class HomeWidget extends StatefulWidget {
 
 class _HomeWidgetState extends State<HomeWidget> {
 
-  _buildList(HeroesController heroesController){
+  _buildList(){
+    HeroesController heroesController = Provider.of<HeroesController>(context);
+
     return ListView.builder(
       itemCount: heroesController.heroes.length,
       itemBuilder: (context, index) {
-        return _buildItems(heroesController.heroes[index], heroesController);
+        return _buildItems(heroesController.heroes[index]);
       },
     );
   }
 
-  _buildItems(HeroModel model, HeroesController heroesController) {
+  _buildItems(HeroModel model) {
+    HeroesController heroesController = Provider.of<HeroesController>(context);
+    
     return ListTile(
       onTap: (){
         print('clicado');
-        model.isFavorite = !model.isFavorite;
-        heroesController.notifyListeners();
+        heroesController.checkFAvorite(model);
       },
 
       title: Text(model.name),
@@ -43,9 +46,15 @@ class _HomeWidgetState extends State<HomeWidget> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Provider"),
+        centerTitle: true,
+        leading: Consumer<HeroesController>(
+          builder: (context, heroesController, widget) {
+            return Center(child: Text('${heroesController.heroes.where((i) => i.isFavorite).length}'));
+          }
+        ),
       ),
       body: Consumer<HeroesController>(builder: (context, heroesController, widget){
-        return _buildList(heroesController);
+        return _buildList();
       },),
     );
   }
